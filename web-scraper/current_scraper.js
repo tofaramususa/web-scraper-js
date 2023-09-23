@@ -5,7 +5,7 @@ const fs = require('fs');
 const { exit } = require('process');
 
 // Define the URL of the website you want to start scraping from
-const startUrl = 'https://www.carrefouruae.com/mafuae/en/v4/search?currentPage=0&filter=&keyword=hp%2016gb&maxPrice=4074&minPrice=1249&nextPageOffset=0&pageSize=60&sortBy=relevance'; // Replace with your target URL
+const startUrl = 'https://www.carrefouruae.com/mafuae/en/v4/search?keyword=hp%2016gb'; // Replace with your target URL
 
 
 async function interactWithLoadMoreButton(page) {
@@ -15,16 +15,29 @@ async function interactWithLoadMoreButton(page) {
     try {
         const loadMoreButton = await page.$(loadMoreButtonSelector);
 
-        if (loadMoreButton) {
+        if (loadMoreButton) 
+		{
             // Scroll down a bit to bring the button into view
-            await page.evaluate(() => {
-                window.scrollBy(0, window.innerHeight);
-            });
+            await page.evaluate(() => 
+			{
+				const scrollHeight = document.body.scrollHeight;
+				const screenHeight = window.innerHeight;
+				const step = screenHeight / 10; // Adjust the step size as needed
+				function smoothScroll() 
+				{
+				  if (window.scrollY + screenHeight < scrollHeight) {
+					window.scrollBy(0, step);
+					requestAnimationFrame(smoothScroll);
+				  }
+				}
+				smoothScroll();
+			});
+            };
 
             // Wait for a random amount of time (e.g., between 2 to 5 seconds)
             const randomWaitTime = Math.floor(Math.random() * (5000 - 2000 + 1)) + 2000;
             console.log(`Waiting for ${randomWaitTime / 1000} seconds...`);
-            await page.waitForTimeout(randomWaitTime);
+            await page.waitForTimeout(2000);
 
             // Click the "Load More" button using Puppeteer
             await loadMoreButton.click();
@@ -33,12 +46,14 @@ async function interactWithLoadMoreButton(page) {
             // Wait for some time for the new content to load
             const loadTime = Math.floor(Math.random() * (5000 - 2000 + 1)) + 2000;
             console.log(`Waiting for new content to load (${loadTime / 1000} seconds)...`);
-            await page.waitForTimeout(loadTime);
+            await page.waitForTimeout(2000);
 
             // Recursively call the interactWithLoadMoreButton function
             await interactWithLoadMoreButton(page);
         }
-    } catch (error) {
+    
+		catch (error)
+		 {
         console.error('Error interacting with "Load More" button:', error.message);
     }
 }
@@ -64,7 +79,7 @@ function removeDuplicates(array)
     await page.goto(startUrl);
 
     // Call the interactWithLoadMoreButton function to interact with the "Load More" button
-    // await interactWithLoadMoreButton(page);
+    await interactWithLoadMoreButton(page);
 
     // Get the final HTML content after loading all links
     const finalHtml = await page.content();
