@@ -6,23 +6,6 @@ const fs = require('fs');
 // Define the URL of the website you want to start scraping from
 const startUrl = 'https://www.carrefouruae.com/mafuae/en/v4/search?keyword=lenovo%20laptop'; // Replace with your target URL
 
-async function scrapeWebsite(url) {
-    try {
-        // Get the HTML content using Axios
-        const response = await axios.get(url);
-        const $ = cheerio.load(response.data);
-
-        // Search for the phrase in any HTML tag's content
-        $('*').each((index, element) => {
-            const tagText = $(element).text();
-            if (tagText.includes('Sold&amp; Delivered by  Carrefour')) {
-				console.log(`Found "Sold & Delivered by Carrefour" in page: ${url}`);
-            }
-        });
-    } catch (error) {
-        console.error('Error:', error.message);
-    }
-}
 
 async function interactWithLoadMoreButton(page) 
 {
