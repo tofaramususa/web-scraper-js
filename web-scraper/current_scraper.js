@@ -25,14 +25,14 @@ async function interactWithLoadMoreButton(page) {
 				const step = screenHeight / 10; // Adjust the step size as needed
 				function smoothScroll() 
 				{
-				  if (window.scrollY + screenHeight < scrollHeight) {
-					window.scrollBy(0, step);
-					requestAnimationFrame(smoothScroll);
+				  if (window.scrollY + screenHeight < scrollHeight)
+				  {
+						window.scrollBy(0, step);
+						requestAnimationFrame(smoothScroll);
 				  }
 				}
 				smoothScroll();
 			});
-            };
 
             // Wait for a random amount of time (e.g., between 2 to 5 seconds)
             const randomWaitTime = Math.floor(Math.random() * (5000 - 2000 + 1)) + 2000;
@@ -50,6 +50,7 @@ async function interactWithLoadMoreButton(page) {
 
             // Recursively call the interactWithLoadMoreButton function
             await interactWithLoadMoreButton(page);
+		};
         }
     
 		catch (error)
@@ -102,9 +103,9 @@ function removeDuplicates(array)
 	fs.appendFile('Links/new_links_to_check.txt', newArray.join('\n'), (err) =>
 	 {
 		if (err) {
-			console.error('Error writing to output.txt:', err);
+			console.error('Error writing to links', err);
 		} else {
-			console.log('All links written to output.txt');
+			console.log('All links written successfully!');
 		}
 	});
 	// Close Puppeteer browser
